@@ -4,10 +4,225 @@ sidebar_label: Travail pratique 1
 description: Énoncé du travail pratique 1
 ---
 
-# Travail pratique 1
+# 🦅 Travail pratique 1 - Angle birds 🐦
+
+- **Pondération** : 10%
+- **Date de l'énoncé** : 15 septembre 2025
+- **Date de remise** : 29 septembre 2025 23h59
+- **Modalité** : Individuel
+
+## Énoncé
+
+Vous devez créer un programme Python qui simule un lancer de projectile inspiré
+d’Angry Birds. L’objectif est de toucher une cible (le « cochon ») placée à une
+distance horizontale et une hauteur données, en choisissant un angle et une
+vitesse initiale. Il peut y avoir du vent, mais il n’agit que sur l’axe
+horizontal. Voici un exemple d’exécution:
+
+```
+=== Lancer de projectile Angle Birds ===
+Entrez la difficulté (F/M/D): M
+Distance horizontale du cochon en mètre (> 0): 50
+Hauteur du cochon en mètre (>= 0): 8
+Vitesse du vent en mètre par seconde, positif = vent arrière, négatif = vent de face: 2
+
+— Tir 1 —
+Angle de tir en degrés, (0.0 < angle < 90): 60
+Vitesse initiale en mètre par seconde (> 0): 20
+Raté… Le projectile retombe au sol aux alentours de x ≈ 42.37 m
+Le projectile est tombé au sol avant d'atteindre la cible (50.00 m).
+
+— Tir 2 —
+Angle de tir en degrés, (0.0 < angle < 90): 60
+Vitesse initiale en mètre par seconde (> 0): 25
+Raté… Le projectile retombe au sol aux alentours de x ≈ 64.00 m
+Au niveau de la cible (x = 50.00 m), le projectile est à y ≈ 16.33 m (cible à y = 8.00 m)
+
+— Tir 3 —
+Angle de tir en degrés, (0.0 < angle < 90): 60
+Vitesse initiale en mètre par seconde (> 0): 22.5
+Raté… Le projectile retombe au sol aux alentours de x ≈ 52.64 m
+Au niveau de la cible (x = 50.00 m), le projectile est à y ≈ 3.68 m (cible à y = 8.00 m)
+
+— Tir 4 —
+Angle de tir en degrés, (0.0 < angle < 90): 60
+Vitesse initiale en mètre par seconde (> 0): 23.8
+Raté… Le projectile retombe au sol aux alentours de x ≈ 58.41 m
+Au niveau de la cible (x = 50.00 m), le projectile est à y ≈ 10.67 m (cible à y = 8.00 m)
+
+— Tir 5 —
+Angle de tir en degrés, (0.0 < angle < 90): 60
+Vitesse initiale en mètre par seconde (> 0): 23
+Raté… Le projectile retombe au sol aux alentours de x ≈ 54.82 m
+Au niveau de la cible (x = 50.00 m), le projectile est à y ≈ 6.49 m (cible à y = 8.00 m)
+
+— Tir 6 —
+Angle de tir en degrés, (0.0 < angle < 90): 60
+Vitesse initiale en mètre par seconde (> 0): 23.4
+Touché ! Le projectile atteint la cible
+
+Merci d’avoir joué à Angle Birds.
+```
+
+### Détails
+
+Le programme commence par demander la difficulté: F (Facile), M (Moyen) ou D
+(Difficile). La lettre n’est pas sensible à la casse. Si l’utilisateur entre
+une autre valeur, le programme adopte automatiquement le mode Moyen (par
+défaut) et affiche un message d’avertissement. Il demande ensuite la distance
+horizontale de la cible, sa hauteur et la vitesse du vent (positive pour un
+vent arrière, négative pour un vent de face). Pour éviter les cas trop faciles
+ou incohérents, une scène est refusée si la distance est inférieure à
+10 mètres ou si la hauteur est négative; dans ce cas, un message d’erreur
+s’affiche et le programme s’arrête.
+
+La difficulté influence la précision exigée et le nombre d’essais autorisés. En mode Facile,
+vous disposez de 8 essais et la cible est considérée atteinte si l’écart vertical au niveau
+de la cible est d’au plus 2,5 m. En mode Moyen, vous avez 6 essais pour une tolérance de 1,0 m.
+En mode Difficile, seulement 4 essais et une tolérance serrée de 0,5 m.
+
+Chaque tir demande deux valeurs: l’angle (en degrés) et la vitesse initiale (en m/s).
+L’angle doit être strictement supérieur à 0° et strictement inférieur à 90°. En mode Difficile,
+un angle minimal supplémentaire est imposé: il doit être légèrement plus grand que l’angle
+géométrique qui relie le lanceur à la cible, soit arctan(hauteur/distance) augmenté de 5°,
+sans jamais atteindre 90°. Si l’angle entré ne respecte pas ces bornes, ou si la vitesse est
+négative ou nulle, le tir est refusé et ne consomme pas d’essai.
+
+Le vent agit uniquement sur la composante horizontale de la vitesse. Concrètement, la vitesse
+horizontale effective du projectile est la somme de la composante horizontale due au tir et de
+la vitesse du vent. Si ce vent de face est tellement fort que la vitesse horizontale effective
+devient nulle ou négative, le tir est rejeté avec un message explicite et l’essai n’est pas
+décompté.
+
+Le mouvement vertical du projectile est soumis à la gravité (g = 9,81 m/s²). Le
+programme commence par calculer la position où le projectile retombe au sol.
+S'il retombe avant la cible, le programme affiche un message indiquant où il
+retombe. Si le projectile touche le sol après la position de la cible, le
+programme affiche la hauteur atteinte à la position de la cible. Si, à ce
+point, l’écart entre la hauteur du projectile et la hauteur du cochon est
+inférieur ou égal à la tolérance de la difficulté choisie, la cible est
+considérée comme touchée et la partie se termine avec un message de
+félicitations. Dans le cas contraire, le joueur perd un essai. Le jeu se
+termine lorsque la cible est atteinte ou que le nombre d’essais autorisés est
+épuisé.
+
+Voici d'autres exemples d’exécution, illustrant divers scénarios:
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+  <TabItem value="ex1" label="Ex. 1">
+  
+  ```
+=== Lancer de projectile Angle Birds ===
+Entrez la difficulté (F/M/D): F
+Distance horizontale du cochon en mètre (> 0): 60
+Hauteur du cochon en mètre (>= 0): 0
+Vitesse du vent en mètre par seconde, positif = vent arrière, négatif = vent de face: 0
+
+— Tir 1 —
+Angle de tir en degrés, (0.0 < angle < 90): 45
+Vitesse initiale en mètre par seconde (> 0): 24.3
+Touché ! Le projectile atteint la cible
+
+Merci d’avoir joué à Angle Birds.
+  ```
+  </TabItem>
+
+  <TabItem value="ex2" label="Ex. 2">
+  
+  ```
+=== Lancer de projectile Angle Birds ===
+Entrez la difficulté (F/M/D): D
+Distance horizontale du cochon en mètre (> 0): 50
+Hauteur du cochon en mètre (>= 0): 50
+Vitesse du vent en mètre par seconde, positif = vent arrière, négatif = vent de face: 0
+(Expert) Angle minimal requis ≈ 50.0°
+
+— Tir 1 —
+Angle de tir en degrés, (50.0 < angle < 90): 45
+Vitesse initiale en mètre par seconde (> 0): 15
+Valeur d’angle invalide. L’angle doit être > 50.0° et < 90°. Réessayez.
+
+— Tir 1 —
+Angle de tir en degrés, (50.0 < angle < 90): 60
+Vitesse initiale en mètre par seconde (> 0): -5
+Vitesse initiale invalide (doit être > 0). Réessayez.
+
+— Tir 1 —
+Angle de tir en degrés, (50.0 < angle < 90): 60
+Vitesse initiale en mètre par seconde (> 0): 15
+Raté… Le projectile retombe au sol aux alentours de x ≈ 19.86 m
+Le projectile est tombé au sol avant d'atteindre la cible (50.00 m).
+
+— Tir 2 —
+Angle de tir en degrés, (50.0 < angle < 90): 60
+Vitesse initiale en mètre par seconde (> 0): 16
+Raté… Le projectile retombe au sol aux alentours de x ≈ 22.60 m
+Le projectile est tombé au sol avant d'atteindre la cible (50.00 m).
+
+— Tir 3 —
+Angle de tir en degrés, (50.0 < angle < 90): 60
+Vitesse initiale en mètre par seconde (> 0): 17
+Raté… Le projectile retombe au sol aux alentours de x ≈ 25.51 m
+Le projectile est tombé au sol avant d'atteindre la cible (50.00 m).
+
+— Tir 4 —
+Angle de tir en degrés, (50.0 < angle < 90): 60
+Vitesse initiale en mètre par seconde (> 0): 18
+Raté… Le projectile retombe au sol aux alentours de x ≈ 28.60 m
+Le projectile est tombé au sol avant d'atteindre la cible (50.00 m).
+
+Vous avez épuisé vos 4 essais. La partie est terminée.
+
+Merci d’avoir joué à Angle Birds.
+  ```
+  </TabItem>
+
+  <TabItem value="ex3" label="Ex. 3">
+  
+  ```
+=== Lancer de projectile Angle Birds ===
+Entrez la difficulté (F/M/D): autre_que_F_M_D
+  Difficulté invalide, passage au niveau Moyen (M) par défaut.
+Distance horizontale du cochon en mètre (> 0): -5
+Hauteur du cochon en mètre (>= 0): 2
+Vitesse du vent en mètre par seconde, positif = vent arrière, négatif = vent de face: 0
+
+Erreur: distance doit être > 0 et/ou hauteur >= 0. Relancez le programme.
+
+Merci d’avoir joué à Angle Birds.
+  ```
+  </TabItem>
+</Tabs>
+
+:::tip
+Abordez le TP par petites étapes:
+- Commencez par lire et valider les entrées (angle, vitesse); affichez-les.
+- Calculez la position de chute sans gérer la cible; affichez la position de chute.
+- Ajoutez la cible et vérifiez la réussite avec une tolérance fixe.
+- Intégrez la difficulté (tolérance et nombre d’essais).
+- Ajoutez le vent sur l’axe x; rejetez les tirs avec une vitesse horizontale
+  nulle ou négative.
+- Soignez les messages et ne consommez un essai que si la simulation a eu lieu.
+
+Testez après chaque étape; de petits tests fréquents évitent un gros débogage final.
+:::
+
+
+
+## Remise
+
+Remettez un fichier `nom_prenom_tp1.py` sur Omnivox. Tout votre code doit être
+dans ce fichier.
 
 :::warning
 
-Énoncé à venir.
+Selon la PDEA, vous perdez 10% de la note par jour de retard et après 5 jours, vous obtenez 0%.
 
 :::
+
+## Grille d'évaluation
+
+Vous pouvez télécharger la grille d'évaluation [ici](pathname:///files/grille_tp1.pdf).
