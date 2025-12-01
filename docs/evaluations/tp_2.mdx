@@ -4,10 +4,197 @@ sidebar_label: Travail pratique 2
 description: Énoncé du travail pratique 2
 ---
 
-# Travail pratique 2
+# 🚣 Travail pratique 2
 
-:::warning
+- **Pondération** : 15%
+- **Date de l'énoncé** : 1er décembre 2025
+- **Date de remise** : 12 septembre 2025 23h59
+- **Individuel**
 
-Énoncé à venir.
+## Contexte général
+
+Dans ce TP, vous simulerez l’évolution de la **température moyenne d’un lac** pendant 16 semaines (du printemps à la fin de l’été).  
+Le travail suit 5 étapes :
+1. coder la fonction du modèle naturel du lac ;
+2. coder 3 fonctions réalistes de températures de l’air (A, B, C) retournant chacune une liste de 16 températures, sans aléatoire ;
+3. calculer la température finale du lac pour chaque scénario (en appliquant le modèle du lac + influence de l’air) ;
+4. écrire une fonction qui ajoute du bruit météo à une liste de températures (prend une liste, retourne une nouvelle liste) ;
+5. analyser le tout avec pandas.
+
+:::info
+
+Les étapes doivent être codées dans un fichier `tp_2.py`. Vous remettez ce fichier sur Omnivox à la fin du TP.
 
 :::
+
+---
+
+## Le modèle naturel du lac (explication)
+
+Le lac possède une **température naturelle d’équilibre** à laquelle il tend progressivement.  
+Formule d’ajustement naturel :
+
+$$
+T_{t+1} = T_t + k \cdot (T_{\text{équi}} - T_t)
+$$
+
+Paramètres typiques :
+- $T_{\text{équi}} = 18°C$
+- $k = 0{,}15$
+
+Intuition :
+> Si l’eau est trop froide → elle se réchauffe.  
+> Si elle est trop chaude → elle se refroidit.  
+> La variation diminue quand le lac est proche de l’équilibre.
+
+---
+
+## Paramètres du TP
+
+- Température initiale du lac : **T₀ = 8°C**
+- Température d’équilibre : **18°C**
+- Constante d’ajustement : **k = 0,15**
+- Durée : **16 semaines**
+
+---
+
+## Étape 1 — Fonction du modèle naturel du lac
+
+### Q1 — Fonction d’ajustement naturel
+Écrire une fonction Python qui reçoit :
+- la température actuelle,
+- la température d’équilibre,
+- la constante d’ajustement,
+
+et applique la formule ci-dessus et retourne la nouvelle température.
+
+---
+
+## Étape 2 — Trois fonctions de températures de l’air (A, B, C)
+
+### Q2 — Conception des fonctions A, B, C
+Coder 3 fonctions (`scenario_a`, `scenario_b`, `scenario_c`) déterministes qui retournent chacune une liste de **16
+températures de l’air** (semaines 1 à 16), sans aléatoire, respectant la
+saisonnalité :
+
+- Fin du printemps (sem. 1–4) : 12°C à 20°C
+- Début de l’été (sem. 5–10) : 18°C à 28°C
+- Fin de l’été (sem. 11–16) : 20°C à 30°C
+
+Scénarios à produire :
+- Scénario A : tendance calme, variations faibles
+- Scénario B : été anormalement chaud
+- Scénario C : été instable mais déterministe (variations marquées, sans aléatoire)
+
+Les trois fonctions retournent des listes de 16 valeurs et sont clairement
+nommées et décrites. Notez qu'elles ne prennent aucun paramètre.
+
+## Étape 3 — Calcul de la température finale pour chaque scénario
+
+### Q3 — Fonction d'ajustement avec l'air
+Écrire une fonction qui calcule la température finale du lac en combinant l'ajustement naturel et l'influence de l'air.
+
+La fonction reçoit :
+- la température actuelle du lac ($T_t$),
+- la température d'équilibre ($T_{\text{équi}}$),
+- la constante d'ajustement naturel ($k$),
+- la température de l'air ($Air_t$),
+- le coefficient d'influence météo ($\alpha$, par exemple 0,3).
+
+Elle applique les étapes suivantes :
+1. Calculer l'ajustement naturel $T_{\text{nat}}$ avec la fonction de Q1.
+2. Appliquer l'influence de l'air :
+   $T_{\text{final}} = T_{\text{nat}} + \alpha \cdot (Air_t - T_{\text{nat}})$
+3. Retourner $T_{\text{final}}$.
+
+
+### Q4 — Fonction de simulation sur 16 semaines
+
+Écrire une fonction qui simule l'évolution du lac sur 16 semaines.
+
+La fonction reçoit :
+- une liste de 16 températures de l'air (issues d'un scénario),
+- la température initiale du lac ($T_0$, par défaut 8°C),
+- la température d'équilibre ($T_{\text{équi}}$, par défaut 18°C),
+- la constante d'ajustement ($k$, par défaut 0,15),
+- le coefficient d'influence météo ($\alpha$, par défaut 0,3).
+
+Elle retourne une **liste de listes** où chaque sous-liste contient :
+- semaine (1 à 16),
+- température initiale de la semaine ($T_t$),
+- température finale de la semaine ($T_{\text{final}_t}$).
+
+Algorithme :
+- Partir de $T_0$.
+- Pour chaque température t dans la liste des températures :
+  1. Enregistrer $T_t$.
+  2. Appliquer la fonction de Q3 pour obtenir $T_{\text{final}_t}$.
+  3. Ajouter [t, $T_t$, $T_{\text{final}_t}$] à la liste de résultats.
+  4. Mettre à jour : $T_{t+1} = T_{\text{final}_t}$.
+- Retourner la liste de listes.
+
+Appeler cette fonction pour chacun des scénarios A, B, C afin d'obtenir trois listes de listes distinctes.
+
+---
+
+## Étape 4 — Fonction d'ajout de bruit météo
+
+### Q5 - Ajout de bruit météo
+
+Écrire une fonction qui prend une liste de températures (d’un scénario) et
+retourne une **nouvelle liste** où un bruit météo est ajouté (ex.: ±1°C ou une
+petite variation systématique).  
+Appliquer cette fonction pour obtenir des versions « avec bruit » de vos scénarios (A’, B’, C’). Utiliser
+la fonction de simulation de l’étape 3 pour obtenir les résultats correspondants.
+
+---
+
+## Étape 5 — Analyse avec pandas
+
+### Q6 — Création du DataFrame
+
+Créer un DataFrame contenant toutes les simulations (scénarios A, B, C et leurs versions avec bruit).
+Ce DataFrame doit avoir les colonnes suivantes :
+- semaine (1 à 16)
+- scénario (A, B, C, A’, B’, C’)
+- température initiale du lac
+- température finale du lac
+
+Sauvegarder ce DataFrame dans un fichier CSV nommé `tp_2_results.csv`.
+
+### Q7 — Filtrage des données
+Avec pandas :
+1. afficher les lignes du scénario A ;
+2. afficher les semaines où la température finale dépasse **22°C** ;
+
+
+### Q8 — Statistiques
+Avec `groupby` :
+- calculer la **température finale moyenne** par scénario ;
+- calculer l’**écart-type** des températures finales ;
+
+Votre code doit afficher de manière claire les réponses aux questions suivantes :
+  - quel scénario rend le lac le plus chaud à la fin ?
+  - lequel est le plus variable ?
+  - quelle est la température finale moyenne sur tous les scénarios ?
+
+---
+
+## Partie Bonus — Visualisations structurées
+
+:::info
+
+Cette partie bonus permet d'obtenir des points pour l'examen pratique.
+
+:::
+
+Produire trois graphiques :
+1. Températures de l’air (courbes des scénarios A, B, C et A’, B’, C’).
+2. Évolution temporelle par scénario (courbes A, B, C et A’, B’, C’ — température finale du lac, semaines 1 à 16).
+3. La variation des températures finales du lac d'une semaine à l'autre (différence entre semaines consécutives) pour chaque scénario.
+
+Chaque graphique contient :
+- un titre ;
+- des étiquettes d’axes ;
+- une légende ;
+- des couleurs distinctes.
