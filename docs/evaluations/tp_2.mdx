@@ -154,13 +154,16 @@ la fonction de simulation de l’étape 3 pour obtenir les résultats correspond
 ### Q6 — Création du DataFrame
 
 Créer un DataFrame contenant toutes les simulations (scénarios A, B, C et leurs versions avec bruit).
-Ce DataFrame doit avoir les colonnes suivantes :
-- semaine (1 à 16)
-- scénario (A, B, C, A’, B’, C’)
+Ce DataFrame doit avoir les quatres colonnes suivantes :
+- semaine (valeurs allant de 1 à 16)
+- scénario (valeurs possibles : A, B, C, A’, B’, C’)
 - température initiale du lac
 - température finale du lac
 
-Sauvegarder ce DataFrame dans un fichier CSV nommé `tp_2_results.csv`.
+C'est-à-dire, chaque ligne du DataFrame correspond à une semaine d’un scénario
+donné. Il faut donc concaténer les résultats des 6 simulations "verticalement".
+
+**Sauvegarder ce DataFrame dans un fichier CSV nommé `tp_2_results.csv`.**
 
 ### Q7 — Filtrage des données
 Avec pandas :
